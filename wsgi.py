@@ -7,20 +7,14 @@ from bs4 import BeautifulSoup
 from flask import Flask
 application = Flask(__name__)
 
-@application.route("/")
-
-# instantiate Slack client
-# slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
-slack_client = SlackClient("xoxb-549447176039-564699325077-AtTF0JqAhttp4IgciLeYRfXj")
-# starterbot's user ID in Slack: value is assigned after the bot starts up
-starterbot_id = None
-
-# constants
-RTM_READ_DELAY = 1 # 1 second delay between reading from RTM
 EXAMPLE_COMMAND = "do"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
+RTM_READ_DELAY = 1
+slack_client = SlackClient("xoxb-549447176039-564699325077-dwNZoaHxUexg5QMrzHXlbY4K")
+starterbot_id = None
 
-def handle_command(command, channel):
+@application.route("/")
+def handle_command(slack_client, command, channel):
     """
         Executes bot command if the command is known
     """
@@ -48,7 +42,7 @@ def handle_command(command, channel):
         text=response or default_response
     )
 
-def parse_bot_commands(slack_events):
+def parse_bot_commands(slack_events, starterbot_id):
     """
         Parses a list of events coming from the Slack RTM API to find bot commands.
         If a bot command is found, this function returns a tuple of command and channel.
@@ -71,15 +65,16 @@ def parse_direct_mention(message_text):
     return (matches.group(1), matches.group(2).strip()) if matches else (None, None)
 
 if __name__ == "__main__":
+    print("starting app...")
     if slack_client.rtm_connect(with_team_state=False):
         print("Starter Bot connected and running!")
         # Read bot's user ID by calling Web API method `auth.test`
         starterbot_id = slack_client.api_call("auth.test")["user_id"]
         while True:
-            command, channel = parse_bot_commands(slack_client.rtm_read())
+            command, channel = parse_bot_commands(slack_client.rtm_read(), starterbot_id)
             if command:
-                #handle_command(command, channel)
                 application.run()
+                #handle_command(slack_client, command, channel)
             time.sleep(RTM_READ_DELAY)
     else:
         print("Connection failed. Exception traceback printed above.")
