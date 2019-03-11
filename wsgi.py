@@ -14,7 +14,7 @@ slack_client = SlackClient("xoxb-549447176039-564699325077-dwNZoaHxUexg5QMrzHXlb
 starterbot_id = None
 
 @application.route("/")
-def hello:
+def hello():
     return "Hello OpenShift!"
 
 def handle_command(slack_client, command, channel):
