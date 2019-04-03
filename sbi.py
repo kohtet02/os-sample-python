@@ -10,7 +10,7 @@ application = Flask(__name__)
 EXAMPLE_COMMAND = "do"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 RTM_READ_DELAY = 1
-slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
+slack_client = SlackClient(os.environ.get('SLACKBOT_API_TOKEN'))
 starterbot_id = None
 
 @application.route("/")
