@@ -1,4 +1,4 @@
-import os
+import subprocess
 from flask import Flask
 
 application = Flask(__name__)
@@ -8,5 +8,5 @@ def hello():
    return "Application is Runngin!!!"
 
 if __name__ == "__main__":
-    os.system("nohup python sbi.py &")
+    subprocess.call("nohup python sbi.py &", shell=True)
     application.run()
