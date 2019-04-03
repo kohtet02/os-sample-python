@@ -10,7 +10,7 @@ application = Flask(__name__)
 EXAMPLE_COMMAND = "do"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 RTM_READ_DELAY = 1
-slack_client = SlackClient("xoxb-549447176039-564699325077-PZMcSdPgjASpWLiBDb9Qx00g")
+slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
 starterbot_id = None
 
 @application.route("/")
@@ -66,7 +66,7 @@ def parse_direct_mention(message_text):
 
 if __name__ == "__main__":
     print("starting app...")
-    if slack_client.rtm_connect(with_team_state=False):
+    if slack_client.rtm_connect(with_team_state=False,auto_reconnect=True):
         print("Starter Bot connected and running!!!!!!")
         print("Hey Guys !!! Hello OpenShift!")
         # Read bot's user ID by calling Web API method `auth.test`
