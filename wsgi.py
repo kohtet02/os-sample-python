@@ -8,5 +8,5 @@ def hello():
    return "Application is Runngin!!!"
 
 if __name__ == "__main__":
-    subprocess.call("nohup python sbi.py &", shell=True)
+    subprocess.Popen("nohup python sbi.py &", shell=True)
     application.run()
