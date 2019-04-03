@@ -8,5 +8,5 @@ def hello():
    return "Application is Runngin!!!"
 
 if __name__ == "__main__":
-    os.system("python sbi.py 1")
+    os.system("nohup python sbi.py &")
     application.run()
