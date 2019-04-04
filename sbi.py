@@ -5,7 +5,8 @@ from slackclient import SlackClient
 import requests
 from bs4 import BeautifulSoup
 
-EXAMPLE_COMMAND = "do"
+DO_COMMAND = "mm"
+ALL_COMMAND = "all"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 RTM_READ_DELAY = 1
 slack_client = SlackClient(os.environ.get('SLACKBOT_API_TOKEN'))
@@ -16,21 +17,29 @@ def handle_command(slack_client, command, channel):
         Executes bot command if the command is known
     """
     # Default response is help text for the user
-    default_response = "Not sure what you mean. Try *{}*.".format(EXAMPLE_COMMAND)
+    default_response = "Not sure what you mean. Try *{do_cmd}* OR *{all_cmd}*.".format(do_cmd=DO_COMMAND, all_cmd=ALL_COMMAND)
 
     # Finds and executes the given command, filling in response
-    response = None
-    # This is where you start to implement more commands!
     response = requests.get("https://kumiai.remit.co.jp/exchange/")
     response.encoding = response.apparent_encoding
     bs = BeautifulSoup(response.text, 'html.parser')
-
-    if command.startswith(EXAMPLE_COMMAND):
+    # This is where you start to implement more commands!
+    if command.startswith(DO_COMMAND):
         for tr in bs.select('table.rate_table')[0].select('tr'):
             if tr.select('th')[0].text == 'Myanmar':
                 # value = '\n\n{} : {} => {}\n'.format(tr.select('th')[0].text,tr.select('td')[0].text,tr.select('td')[1].text)
                 # response = "Sure...write some more code then I can do that!"
-                response = '\n\n{} : {} => {}\n'.format(tr.select('th')[0].text,tr.select('td')[0].text,tr.select('td')[1].text)
+                response = '*{}* : *{}* => *{}*\n'.format(tr.select('th')[0].text,tr.select('td')[0].text,tr.select('td')[1].text)
+    elif command.startswith(ALL_COMMAND):
+        response = ''
+        for tr in bs.select('table.rate_table')[0].select('tr'):
+            if tr.select('th')[0].text != '国名':
+                country = tr.select('th')[0].text
+                country = country.strip('*')
+                response = response + '*{}* : *{}* => *{}*\n'.format(country,tr.select('td')[0].text,tr.select('td')[1].text)
+    else:
+        response = None
+
 
     # Sends the response back to the channel
     slack_client.api_call(
