@@ -4,8 +4,6 @@ import re
 from slackclient import SlackClient
 import requests
 from bs4 import BeautifulSoup
-from flask import Flask
-application = Flask(__name__)
 
 EXAMPLE_COMMAND = "do"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
@@ -13,7 +11,6 @@ RTM_READ_DELAY = 1
 slack_client = SlackClient(os.environ.get('SLACKBOT_API_TOKEN'))
 starterbot_id = None
 
-@application.route("/")
 def handle_command(slack_client, command, channel):
     """
         Executes bot command if the command is known
