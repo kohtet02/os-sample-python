@@ -1,2 +1,2 @@
 APP_CONFIG=config.py
-SBI_START=sbi.py
+APP_FILE=sbi.py
