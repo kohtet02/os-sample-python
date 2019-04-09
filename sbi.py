@@ -9,8 +9,7 @@ DO_COMMAND = "mm"
 ALL_COMMAND = "all"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 RTM_READ_DELAY = 1
-#slack_client = SlackClient(os.environ.get('SLACKBOT_API_TOKEN'))
-slack_client = SlackClient('xoxb-549447176039-564699325077-qf4TUaKRQn3sE2y5pIklf6pm')
+slack_client = SlackClient(os.environ.get('SLACKBOT_API_TOKEN'))
 starterbot_id = None
 
 def handle_command(slack_client, command, channel):
