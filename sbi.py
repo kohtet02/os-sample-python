@@ -9,7 +9,8 @@ DO_COMMAND = "mm"
 ALL_COMMAND = "all"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 RTM_READ_DELAY = 1
-slack_client = SlackClient(os.environ.get('SLACKBOT_API_TOKEN'))
+#slack_client = SlackClient(os.environ.get('SLACKBOT_API_TOKEN'))
+slack_client = SlackClient('xoxb-549447176039-564699325077-qf4TUaKRQn3sE2y5pIklf6pm')
 starterbot_id = None
 
 def handle_command(slack_client, command, channel):
@@ -30,6 +31,18 @@ def handle_command(slack_client, command, channel):
                 # value = '\n\n{} : {} => {}\n'.format(tr.select('th')[0].text,tr.select('td')[0].text,tr.select('td')[1].text)
                 # response = "Sure...write some more code then I can do that!"
                 response = '*{}* : *{}* => *{}*\n'.format(tr.select('th')[0].text,tr.select('td')[0].text,tr.select('td')[1].text)
+                rate_list = re.findall("\d+\.\d+", tr.select('td')[1].text)
+                rate = float(rate_list[0])
+                if rate < 13.4:
+                    response = response + ':sob: :sob: :sob:'
+                elif rate >= 13.4 and rate < 13.5:
+                    response = response + ':cry: :cry: :cry:'
+                elif rate >= 13.5 and rate < 13.6:
+                    response = response + ':relaxed: :relaxed: :relaxed:'
+                elif rate >= 13.6 and rate < 13.7:
+                    response = response + ':star-struck: :star-struck: :star-struck:'
+                else:
+                    response = response + ':money_mouth_face: :money_mouth_face: :money_mouth_face:'
     elif command.startswith(ALL_COMMAND):
         response = ''
         for tr in bs.select('table.rate_table')[0].select('tr'):
